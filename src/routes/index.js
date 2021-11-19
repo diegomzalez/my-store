@@ -1,3 +1,4 @@
+const router = require('express').Router();
 const products = require('../routes/products');
 const categories = require('../routes/categories');
 const login = require('../routes/login');
@@ -13,17 +14,18 @@ const notFound = require('../routes/notFound');
 const home = require('../routes/home');
 
 module.exports = (function (app) {
-  app.use('/api/v1/', home);
-  app.use('/api/v1/products', products);
-  app.use('/api/v1/categories', categories);
-  app.use('/api/v1/login', login);
-  app.use('/api/v1/users', users);
-  app.use('/api/v1/orders', orders);
-  app.use('/api/v1/account', account);
-  app.use('/api/v1/newPassword', newPassword);
-  app.use('/api/v1/checkout', checkout);
-  app.use('/api/v1/sendEmail', sendEmail);
-  app.use('/api/v1/passwordRecovery', passwordRecovery);
-  app.use('/api/v1/singUp', signUp);
-  app.use('/api/v1/*', notFound);
+  app.use('/api/v1', router);
+  router.use('/', home);
+  router.use('/products', products);
+  router.use('/categories', categories);
+  router.use('/login', login);
+  router.use('/users', users);
+  router.use('/orders', orders);
+  router.use('/account', account);
+  router.use('/newPassword', newPassword);
+  router.use('/checkout', checkout);
+  router.use('/sendEmail', sendEmail);
+  router.use('/passwordRecovery', passwordRecovery);
+  router.use('/singUp', signUp);
+  router.use('/*', notFound);
 });
