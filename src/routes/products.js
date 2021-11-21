@@ -1,19 +1,16 @@
 const router = require('express').Router();
 const faker = require('faker');
+const { categories } = require('./categories');
+const products = [];
+for (let i = 0; i < 10; i++) {
+  products.push({
+    id: faker.random.uuid(),
+    name: faker.commerce.productName(),
+    price: faker.commerce.price(),
+  });
+};
 
-module.exports = router.get('/', (req, res) => {
-  const { size } = req.query;
-  const limit = size || 10;
-  const products = [];
-  for (let i = 0; i < limit; i++) {
-    products.push({
-      id: faker.random.uuid(),
-      name: faker.commerce.productName(),
-      price: faker.commerce.price(),
-      image: faker.image.image(),
-      description: faker.lorem.paragraph(),
-    });
-  }
+router.get('/', (req, res) => {
   res.send(products);
 });
 
@@ -22,6 +19,22 @@ router.post('/', (req, res) => {
   res.send({
     message: `Product ${body.name} created successfully`,
     data: body,
+  });
+});
+
+router.patch('/:id', (req, res) => {
+  const { id } = req.params;
+  const body = req.body;
+  res.send({
+    message: `Product ${id} updated successfully`,
+    data: body,
+  });
+});
+
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  res.send({
+    message: `Product ${id} deleted successfully`,
   });
 });
 
@@ -35,3 +48,5 @@ router.get('/:id', (req, res) => {
     },
   ]);
 });
+
+module.exports = router;

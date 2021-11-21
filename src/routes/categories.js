@@ -1,12 +1,23 @@
 const router = require('express').Router();
+const faker = require('faker');
+const categories = [
+  {
+    id: faker.random.uuid(),
+  }
+];
 
-module.exports = router.get('/categories/:categoryId/products/:productId', (req, res) => {
-  const { categoryId, productId } = req.params;
-  res.send([
-    {
-      categoryId,
-      productId,
-    },
-  ]);
+router.get('/', (req, res) => {
+  res.send(categories);
 });
 
+router.get('/:categoryId', (req, res) => {
+  const { categoryId } = req.params;
+  const category = categories.map(category => category.id);
+  if (category.includes(categoryId)) {
+    res.send("XD");
+  } else {
+    res.send(`Category ${categoryId} not found`);
+  };
+});
+
+module.exports = router;
