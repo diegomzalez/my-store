@@ -1,29 +1,56 @@
 const router = require('express').Router();
-const faker = require('faker');
-const orders = [];
-for(let i = 0; i < 10; i++) {
-  orders.push({
-    id: faker.random.uuid(),
-    name: faker.commerce.productName(),
-    image: faker.image.imageUrl(),
-    price: faker.commerce.price(),
-    quantity: faker.random.number( 10 ),
-  });
-}
+const OrdersService = require('../services/orders');
+const service = new OrdersService();
 
-router.get('/', (req, res) => {
-  res.send(orders);
+router.get('/', async (req, res, next) => {
+  try {
+    const orders = await service.find();
+    res.status(200).json(orders);
+  } catch (error) {
+    next(error);
+  }
 });
 
-router.get('/:id', (req, res) => {
-  const order = orders.find(order => order.id === req.params.id);
-  if(order) {
-    res.send(order);
-    } else {
-      res.status(404).send({
-        message: 'Order not found',
-      });
-    }
-  });
+router.post('/', async (req, res) => {
+  try {
+    const order = await service.create(req.body);
+    res.status(201).json({
+      message: 'The order was created succesfully',
+      order: order,
+    });
+  } catch (error) {
+    res.status(202).json({
+      message: error.message,
+    });
+  };
+});
+
+router.get('/:id', async (req, res, next) => {
+  try {
+    const order = await service.findOne(req.params.id);
+    res.status(302).json(order);
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+router.patch('/:id', async (req, res, next) => {
+  try {
+    const order = await service.update(req.params.id, req.body);
+    res.status(202).json(order);
+  } catch (error) {
+    next(error);
+  };
+});
+
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const order = await service.delete(req.params.id);
+    res.status(202).json('The order was deleted');
+  } catch (error) {
+    next(error);
+  };
+});
 
 module.exports = router;

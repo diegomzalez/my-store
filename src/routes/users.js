@@ -1,27 +1,51 @@
 const router = require('express').Router();
-const faker = require('faker');
-const users = [];
-for(let i = 0; i < 10; i++) {
-  users.push({
-    id: faker.random.uuid(),
-    name: faker.name.findName(),
-    email: faker.internet.email(),
-    avatar: faker.internet.avatar()
-  });
-}
-router.get('/', (req, res) => {
-  res.json(users);
+const UsersService = require('../services/users');
+const service = new UsersService;
+
+router.get('/', async (req, res) => {
+  const orders = await service.find();
+  res.status(200).json(orders);
 });
 
-router.get('/:id', (req, res) => {
-  const { id } = req.params;
-  const user = users.find(user => user.id === id);
-  if(user) {
-    res.send(user);
-  } else {
-    res.sendStatus(404);
-  }
-})
+router.post('/', async (req, res, next) => {
+  try {
+    const order = await service.create(req.body);
+    res.status(201).json({
+      message: 'The order was created succesfully',
+      order: order,
+    });
+  } catch (error) {
+    next(error);
+  };
+});
+
+router.get('/:id', async (req, res, next) => {
+  try {
+    const order = await service.findOne(req.params.id);
+    res.status(302).json(order);
+  } catch (error) {
+    next(error);
+  };
+});
+
+
+router.patch('/:id', async (req, res, next) => {
+  try {
+    const order = await service.update(req.params.id, req.body);
+    res.status(202).json(order);
+  } catch (error) {
+    next(error);
+  };
+});
+
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const order = await service.delete(req.params.id);
+    res.status(202).json('The order was deleted');
+  } catch (error) {
+    next(error);
+  };
+});
 
 
 module.exports = router;

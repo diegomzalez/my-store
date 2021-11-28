@@ -1,24 +1,68 @@
 const router = require('express').Router();
-const faker = require('faker');
-const categories = [];
-for (let i = 0; i < 10; i++) {
-  categories.push({
-    id: faker.random.uuid(),
-    name: faker.commerce.department(),
-    image: faker.image.imageUrl(),
-  });
-}
+const CategoriesService = require('../services/categories');
+const service = new CategoriesService();
 
-router.get('/', (req, res) => {
-  res.status(200).json(categories);
+router.get('/', async (req, res) => {
+  const orders = await service.find();
+  res.status(200).json(orders);
 });
-
-router.get('/:id', (req, res) => {
-  const category = categories.find(category => category.id === req.params.id);
-  if (category) {
-    res.status(302).json(category);
-  } else {
-    res.status(404).json(`Category ${req.params.id} doesn't exist`);
+router.post('/', async (req, res, next) => {
+  try {
+    const order = await service.create(req.body);
+    res.status(201).json({
+      message: 'The order was created succesfully',
+      order: order,
+    });
+  } catch (error) {
+    next(error);
+  };
+});
+router.get('/:id', async (req, res, next) => {
+  try {
+    const order = await service.findOne(req.params.id);
+    res.status(302).json(order);
+  } catch (error) {
+    next(error);
+  };
+});
+router.get('/', (req, res, next) => {
+  try {
+    const logins = service.find();
+    res.status(200).json(logins);
+  } catch (error) {
+    next(error);
+  };
+});
+router.get('/:id', (req, res, next) => {
+  try {
+    const login = service.findOne(req.params.id);
+    res.status(302).json(login);
+  } catch (error) {
+    next(error);
+  };
+});
+router.post('/', (req, res, next) => {
+  try {
+    const login = service.create(req.body);
+    res.status(201).json(login);
+  } catch (error) {
+    next(error);
+  };
+});
+router.patch('/:id', async (req, res, next) => {
+  try {
+    const order = await service.update(req.params.id, req.body);
+    res.status(202).json(order);
+  } catch (error) {
+    next(error);
+  };
+});
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const order = await service.delete(req.params.id);
+    res.status(202).json('The order was deleted');
+  } catch (error) {
+    next(error);
   };
 });
 
