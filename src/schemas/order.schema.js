@@ -14,7 +14,6 @@ const createOrderSchema = Joi.object({
   address: address.required(),
 });
 const updateOrderSchema = Joi.object({
-  id: id.required(),
   number: number,
   total: total,
   address: address,

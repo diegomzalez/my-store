@@ -1,56 +1,64 @@
 const router = require('express').Router();
 const OrdersService = require('../services/orders');
 const service = new OrdersService();
+const validatorHandler = require('../middlewares/validator.handler');
+const { getOrderSchema, createOrderSchema, updateOrderSchema, deleteOrderSchema } = require('../schemas/order.schema');
 
-router.get('/', async (req, res, next) => {
-  try {
-    const orders = await service.find();
-    res.status(200).json(orders);
-  } catch (error) {
-    next(error);
-  }
-});
+router.get('/',
+  async (req, res, next) => {
+    try {
+      res.status(200).json(await service.find());
+    } catch (error) {
+      next(error);
+    }
+  });
 
-router.post('/', async (req, res) => {
-  try {
-    const order = await service.create(req.body);
-    res.status(201).json({
-      message: 'The order was created succesfully',
-      order: order,
-    });
-  } catch (error) {
-    res.status(202).json({
-      message: error.message,
-    });
-  };
-});
+router.post('/',
+  validatorHandler(createOrderSchema, 'body'),
+  async (req, res) => {
+    try {
+      res.status(201).json({
+        message: 'The order was created succesfully',
+        order: await service.create(req.body),
+      });
+    } catch (error) {
+      res.status(202).json({
+        message: error.message,
+      });
+    };
+  });
 
-router.get('/:id', async (req, res, next) => {
-  try {
-    const order = await service.findOne(req.params.id);
-    res.status(302).json(order);
-  } catch (error) {
-    next(error);
-  }
-});
+router.get('/:id',
+  validatorHandler(getOrderSchema, 'params'),
+  async (req, res, next) => {
+    try {
+      res.status(302).json(await service.findOne(req.params.id));
+    } catch (error) {
+      next(error);
+    }
+  });
 
 
-router.patch('/:id', async (req, res, next) => {
-  try {
-    const order = await service.update(req.params.id, req.body);
-    res.status(202).json(order);
-  } catch (error) {
-    next(error);
-  };
-});
+router.patch('/:id',
+  validatorHandler(getOrderSchema, 'params'),
+  validatorHandler(updateOrderSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      res.status(202).json(await service.update(req.params.id, req.body));
+    } catch (error) {
+      next(error);
+    };
+  });
 
-router.delete('/:id', async (req, res, next) => {
-  try {
-    const order = await service.delete(req.params.id);
-    res.status(202).json('The order was deleted');
-  } catch (error) {
-    next(error);
-  };
-});
+router.delete('/:id',
+  validatorHandler(deleteOrderSchema, 'params'),
+  async (req, res, next) => {
+    try {
+      await service.delete(req.params.id);
+      res.status(202).json('The order was deleted');
+    } catch (error) {
+      next(error);
+    };
+  });
 
 module.exports = router;

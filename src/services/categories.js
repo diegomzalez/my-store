@@ -7,26 +7,12 @@ class CategoriesService {
     this.generate();
   };
   async generate() {
-    for (let index = 0; index < 20; index++) {
-      this.categories.push({
+    for (let i = 0; i < 10; i++) {
+      await this.categories.push({
         id: faker.datatype.uuid(),
         name: faker.commerce.department(),
       });
     };
-  };
-  async create(body) {
-    const data = {
-      id: faker.datatype.uuid(),
-      ...body,
-    };
-    if (Object.keys(body).length < 1) {
-      throw boom.notAcceptable('Insufficient data');
-    };
-    this.categories.push(data);
-    return data;
-  }
-  async find() {
-    return await this.categories;
   };
   async findOne(id) {
     const category = await this.categories.find(category => category.id === id);
@@ -37,6 +23,14 @@ class CategoriesService {
       throw boom.conflict('category Is Block');
     }
     return category;
+  };
+  async create(body) {
+    const data = {
+      id: faker.datatype.uuid(),
+      ...body,
+    };
+    this.categories.push(data);
+    return data;
   };
   async update(id, body) {
     const index = await this.categories.findIndex(category => category.id === id);

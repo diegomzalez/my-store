@@ -3,17 +3,17 @@ const Joi = require('joi');
 const id = Joi.string().uuid();
 const name = Joi.string().min(2).max(15);
 
-const getOrderSchema = Joi.object({
+const getCategoryrSchema = Joi.object({
   id: id.required(),
 });
-const createOrderSchema = Joi.object({
+const createCategoryrSchema = Joi.object({
   name: name.required(),
 });
-const updateOrderSchema = Joi.object({
+const updateCategoryrSchema = Joi.object({
   name: name.required(),
 });
-const deleteOrderSchema = Joi.object({
+const deleteCategoryrSchema = Joi.object({
   id: id.required(),
 });
 
-module.exports = { getOrderSchema, createOrderSchema, updateOrderSchema, deleteOrderSchema };
+module.exports = { getCategoryrSchema, createCategoryrSchema, updateCategoryrSchema, deleteCategoryrSchema };
