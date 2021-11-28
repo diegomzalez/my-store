@@ -29,4 +29,4 @@ app.use(errorHandler);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Server port
-app.listen(3500);
+app.listen(process.env.PORT || 3500);
