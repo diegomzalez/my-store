@@ -1,67 +1,47 @@
-const faker = require('faker');
-const boom = require('@hapi/boom');
+const { models } = require('../libs/sequelize');
+const { Op } = require('sequelize');
 
 class ProductsService {
   constructor() {
-    this.products = [];
-    this.generate();
-  };
-  async generate() {
-    for (let i = 0; i < 10; i++) {
-      await this.products.push({
-        id: faker.datatype.uuid(),
-        name: faker.commerce.productName(),
-        price: faker.commerce.price(),
-        image: faker.image.imageUrl(),
-        isBlock: faker.datatype.boolean(),
-      });
-    };
   };
   async create(body) {
-    const data = {
-      id: faker.datatype.uuid(),
-      ...body,
-      isBlock: faker.datatype.boolean(),
-    };
-    this.products.push(data);
-    return data;
+    const product = await models.Product.create(body);
+    return product;
   }
-  async find() {
-    return await this.products;
+  async find(query) {
+    const options = {
+      include: ['category'],
+      where: {},
+    };
+    const { limit, offset } = query;
+    if (limit && offset) {
+      options.limit = limit;
+      options.offset = offset;
+    };
+    const { price } = query;
+    if (price) {
+      options.where.price = price;
+    };
+    const { price_min, price_max } = query;
+    if (price_min && price_max) {
+      options.where.price = {
+        [Op.gte]: price_min,
+        [Op.lte]: price_max,
+      };
+    };
+    return await models.Product.findAll(options);
   };
   async findOne(id) {
-    const product = await this.products.find(product => product.id === id);
-    if (!product) {
-      throw boom.notFound('Product Not Found');
-    }
-    if (product.isBlock) {
-      throw boom.conflict('Product Is Block');
-    }
+    const product = await models.Product.findByPk(id);
     return product;
   };
   async update(id, body) {
-    const index = await this.products.findIndex(product => product.id === id);
-    if (index === -1) {
-      throw boom.notFound('Product Not Found');
-    }
-    if (Number.isInteger(body.price)) {
-      body.price = String(body.price);
-    };
-    const product = this.products[index];
-    const update = {
-      ...product,
-      ...body,
-    };
-    this.products[index] = update;
-    return update;
+    const product = await this.findOne(id);
+    return await product.update(body);
   };
   async delete(id) {
-    const product = await this.products.find(product => product.id === id);
-    if (!product) {
-      throw boom.notFound('Product Not Found');
-    };
-    this.products.splice(this.products.indexOf(product), 1);
-    return product;
+    const product = await this.findOne(id);
+    return await product.destroy(id);
   };
 };
 

@@ -5,7 +5,7 @@ const validatorHandler = require('../middlewares/validator.handler');
 const { getLoginSchema, createLoginSchema, updateLoginSchema, deleteLoginSchema } = require('../schemas/login.schema');
 
 router.get('/', async (req, res) => {
-  res.status(200).json(service.logins);
+  res.status(200).json(await service.find());
 });
 router.post('/',
   validatorHandler(createLoginSchema, 'body'),

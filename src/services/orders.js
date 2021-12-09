@@ -1,66 +1,46 @@
-const faker = require('faker');
 const boom = require('@hapi/boom');
+const { models } = require('../libs/sequelize');
 
 class OrdersService {
   constructor() {
-    this.orders = [];
-    this.generate();
-  };
-  async generate() {
-    for (let i = 0; i < 10; i++) {
-      await this.orders.push({
-        id: faker.datatype.uuid(),
-        number: faker.datatype.number(10),
-        total: faker.datatype.number(1000),
-        address: faker.address.country(),
-      });
-    };
   };
   async create(body) {
-    const data = {
-      id: faker.datatype.uuid(),
-      ...body,
-      isBlock: faker.datatype.boolean(),
+    const order = await models.Order.create(body);
+    if (!order) {
+      throw boom.badRequest('Bad Request');
     };
-    if (Object.keys(body).length < 3) {
-      throw boom.notAcceptable('Insufficient data');
+    return order;
+  };
+  async addItem(body) {
+    const item = await models.OrderProduct.create(body);
+    if (!item) {
+      throw boom.badRequest('Bad Request');
     };
-    this.orders.push(data);
-    return data;
-  }
+    return item;
+  };
   async find() {
-    return await this.orders;
+    return await models.Order.findAll();
   };
   async findOne(id) {
-    const order = await this.orders.find(order => order.id === id);
+    const order = await models.Order.findByPk(id, {
+      include: [
+        {association: 'customer',
+        include: ['user']},
+        'items',
+      ]
+    });
     if (!order) {
-      throw boom.notFound('order Not Found');
-    }
+      throw boom.notFound('Not Found');
+    };
     return order;
   };
   async update(id, body) {
-    const index = await this.orders.findIndex(order => order.id === id);
-    if (index === -1) {
-      throw boom.notFound('order Not Found');
-    }
-    if (Number.isInteger(body.price)) {
-      body.price = String(body.price);
-    };
-    const order = this.orders[index];
-    const update = {
-      ...order,
-      ...body,
-    };
-    this.orders[index] = update;
-    return update;
+    const order = await this.findOne(id);
+    return await order.update(body);
   };
   async delete(id) {
-    const order = await this.orders.find(order => order.id === id);
-    if (!order) {
-      throw boom.notFound('order Not Found');
-    };
-    this.orders.splice(this.orders.indexOf(order), 1);
-    return order;
+    const order = await this.findOne(id);
+    return await order.destroy(order);
   };
 };
 

@@ -2,19 +2,32 @@ const router = require('express').Router();
 const ProductsService = require('../services/products');
 const service = new ProductsService();
 const validatorHandler = require('../middlewares/validator.handler');
-const { createProductSchema, updateProductSchema, getProductSchema, deleteProductSchema } = require('../schemas/product.schema');
+const { createProductSchema, updateProductSchema, getProductSchema, deleteProductSchema, queryProductSchema } = require('../schemas/product.schema');
 
-router.get('/', async (req, res) => {
-  const products = await service.find();
-  res.status(200).json(products);
-});
+router.get('/',
+  validatorHandler(queryProductSchema, 'query'),
+  async (req, res, next) => {
+    try {
+      const products = await service.find(req.query);
+      res.statusCode = 302;
+      res.status(res.statusCode).json({
+        statusCode: res.statusCode,
+        message: 'The products was find succesfully',
+        products: products,
+      });
+    } catch (error) {
+      next(error);
+    };
+  });
 
 router.post('/',
   validatorHandler(createProductSchema, 'body'),
   async (req, res, next) => {
     try {
       const product = await service.create(req.body);
-      res.status(201).json({
+      res.statusCode = 202;
+      res.status(res.statusCode).json({
+        statusCode: res.statusCode,
         message: 'The product was created succesfully',
         product: product,
       });
@@ -28,7 +41,12 @@ router.get('/:id',
   async (req, res, next) => {
     try {
       const product = await service.findOne(req.params.id);
-      res.status(302).json(product);
+      res.statusCode = 302;
+      res.status(res.statusCode).json({
+        statusCode: res.statusCode,
+        message: 'The product was find succesfully',
+        product: product,
+      });
     } catch (error) {
       next(error);
     }
@@ -41,7 +59,12 @@ router.patch('/:id',
   async (req, res, next) => {
     try {
       const product = await service.update(req.params.id, req.body);
-      res.status(202).json(product);
+      res.statusCode = 202;
+      res.status(res.statusCode).json({
+        statusCode: res.statusCode,
+        message: 'The product was updated succesfully',
+        product: product,
+      });
     } catch (error) {
       next(error);
     };
@@ -52,7 +75,12 @@ router.delete('/:id',
   async (req, res, next) => {
     try {
       const product = await service.delete(req.params.id);
-      res.status(202).json('The product was deleted');
+      res.statusCode = 202;
+      res.status(res.statusCode).json({
+        statusCode: res.statusCode,
+        message: 'The product was find succesfully',
+        product: product,
+      });
     } catch (error) {
       next(error);
     };

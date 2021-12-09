@@ -4,8 +4,8 @@ const service = new CategoriesService();
 const validatorHandler = require('../middlewares/validator.handler');
 const { getCategoryrSchema, createCategoryrSchema, updateCategoryrSchema, deleteCategoryrSchema } = require('../schemas/category.schema');
 
-router.get('/', (req, res) => {
-  res.status(200).send(service.categories);
+router.get('/', async (req, res) => {
+  res.status(200).send(await service.find());
 });
 
 router.post('/',

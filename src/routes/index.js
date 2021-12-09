@@ -12,6 +12,7 @@ const passwordRecovery = require('../routes/passwordRecovery');
 const signUp = require('../routes/signUp');
 const notFound = require('../routes/notFound');
 const home = require('../routes/home');
+const customers = require('./customer');
 
 module.exports = (function (app) {
   app.use('/api/v1', router);
@@ -28,4 +29,5 @@ module.exports = (function (app) {
   router.use('/passwordRecovery', passwordRecovery);
   router.use('/singUp', signUp);
   router.use('/*', notFound);
+  router.use('/customers', customers);
 });

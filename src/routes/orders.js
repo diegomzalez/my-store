@@ -2,7 +2,7 @@ const router = require('express').Router();
 const OrdersService = require('../services/orders');
 const service = new OrdersService();
 const validatorHandler = require('../middlewares/validator.handler');
-const { getOrderSchema, createOrderSchema, updateOrderSchema, deleteOrderSchema } = require('../schemas/order.schema');
+const { getOrderSchema, createOrderSchema, updateOrderSchema, deleteOrderSchema, addItemSchema } = require('../schemas/order.schema');
 
 router.get('/',
   async (req, res, next) => {
@@ -58,6 +58,20 @@ router.delete('/:id',
       res.status(202).json('The order was deleted');
     } catch (error) {
       next(error);
+    };
+  });
+  router.post('/add-item',
+  validatorHandler(addItemSchema, 'body'),
+  async (req, res) => {
+    try {
+      res.status(201).json({
+        message: 'The order was created succesfully',
+        item: await service.addItem(req.body),
+      });
+    } catch (error) {
+      res.status(202).json({
+        message: error.message,
+      });
     };
   });
 

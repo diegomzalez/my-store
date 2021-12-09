@@ -2,7 +2,7 @@
 const express = require('express');
 const routerApi = require('./routes');
 const app = express();
-const { logErros, errorHandler, boomErrorHandler } = require('./middlewares/error.handler');
+const { logErros, errorHandler, boomErrorHandler, sequilizeErrorHandler } = require('./middlewares/error.handler');
 var cors = require('cors');
 
 // Swagger
@@ -18,10 +18,9 @@ app.use(express.json());
 // Server routes
 routerApi(app);
 
-// Cors
-
 // Middlewares
 app.use(logErros);
+app.use(sequilizeErrorHandler);
 app.use(boomErrorHandler);
 app.use(errorHandler);
 
