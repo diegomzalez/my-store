@@ -5,10 +5,8 @@ const { DataTypes } = require('sequelize');
 module.exports = {
   up: async (queryInterface) => {
     await queryInterface.addColumn(ORDER_TABLE, 'address', {
-      address: {
         allowNull: false,
         type: DataTypes.STRING,
-      },
     });
   },
 
