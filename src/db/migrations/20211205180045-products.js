@@ -2,9 +2,11 @@
 const { DataTypes } = require('sequelize');
 
 const { PRODUCT_TABLE } = require('../models/product.model')
-const { CATEGORY_TABLE } = require('../models/category.model');
+const { CATEGORY_TABLE, CategorySchema } = require('../models/category.model');
+
 module.exports = {
   up: async (queryInterface) => {
+    await queryInterface.createTable(CATEGORY_TABLE, CategorySchema);
     await queryInterface.createTable(PRODUCT_TABLE, {
       id: {
         allowNull: false,
@@ -37,13 +39,14 @@ module.exports = {
           key: 'id'
         },
         onUpdate: 'CASCADE',
-        onDelete: 'cascade'
+        onDelete: 'SET NULL'
       }
     });
   },
 
   down: async (queryInterface) => {
     await queryInterface.dropTable(PRODUCT_TABLE);
+    await queryInterface.dropTable(CATEGORY_TABLE);
   },
 };
 
