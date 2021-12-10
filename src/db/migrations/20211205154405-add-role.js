@@ -6,11 +6,9 @@ const { DataTypes } = require('sequelize');
 module.exports = {
   up: async (queryInterface) => {
     await queryInterface.addColumn(USER_TABLE, 'role', {
-      role: {
-        allowNull: false,
-        type: DataTypes.STRING,
-        efaultValue: 'customer',
-      },
+      allowNull: false,
+      type: DataTypes.STRING,
+      defaultValue: 'customer'
     });
   },
 
