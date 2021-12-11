@@ -1,4 +1,6 @@
 const { models } = require('../libs/sequelize');
+const { isObjectEmpty } = require('object-is-empty');
+
 class CategoriesService {
   constructor() {
   };
@@ -16,8 +18,8 @@ class CategoriesService {
     return category;
   };
   async update(id, body) {
-    const category = await this.findOne(id);
-    return await category.update(body);
+    if (isObjectEmpty(body)) throw new Error('Body cannot be empty');
+    return await (await this.findOne(id)).update(body);
   };
   async delete(id) {
     const category = await this.findOne(id);
