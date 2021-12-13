@@ -8,11 +8,18 @@ class UsersService {
     if (!body) {
       throw boom.badRequest('Bad Request');
     };
-    return await models.User.create(body);
+    const newUser = await models.User.create(body);
+    return newUser;
   }
   async find() {
     const user = await models.User.findAll({
       include: ['customer']
+    });
+    return user;
+  };
+  async findByEmail(email) {
+    const user = await models.User.findOne({
+      where: { email },
     });
     return user;
   };

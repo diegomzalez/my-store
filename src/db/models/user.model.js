@@ -1,4 +1,7 @@
 const { Model, DataTypes, Sequelize} = require('sequelize');
+const { hashPassword } = require('../hooks/hash');
+const { hideHash } = require('../hooks/hidingHash');
+
 
 const USER_TABLE = 'users';
 
@@ -21,7 +24,7 @@ const UserSchema = {
   role: {
     allowNull: false,
     type: DataTypes.STRING,
-    efaultValue: 'customer',
+    defaultValue: 'customer',
   },
   createdAt: {
     allowNull: false,
@@ -44,7 +47,18 @@ class User extends Model {
       tableName: USER_TABLE,
       modelName: 'User',
       timestamps: false,
-    }
+      hooks: {
+        beforeCreate: async (user, options) => {
+          await hashPassword(user, options);
+        },
+        afterCreate: async (user, options) => {
+          await hideHash(user, options);
+        },
+        afterFind: async (user, options) => {
+          await hideHash(user, options)
+        },
+      },
+    };
   };
 };
 

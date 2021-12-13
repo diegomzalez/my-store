@@ -4,6 +4,7 @@ const routerApi = require('./routes');
 const app = express();
 const { logErros, errorHandler, boomErrorHandler, sequilizeErrorHandler } = require('./middlewares/error.handler');
 var cors = require('cors');
+const passport = require('passport')
 
 // Swagger
 const swaggerUi = require('swagger-ui-express'),
@@ -11,6 +12,11 @@ const swaggerUi = require('swagger-ui-express'),
 
 // Cors
 app.use(cors());
+
+// Passport
+require('./utils/auth/');
+app.use(passport.initialize());
+
 
 // Middlewares
 app.use(express.json());

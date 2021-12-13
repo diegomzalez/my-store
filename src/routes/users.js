@@ -1,10 +1,12 @@
 const router = require('express').Router();
+const passport = require('passport');
 const UsersService = require('../services/users');
 const service = new UsersService;
 const { createUserSchema, updateUserSchema, getUserSchema, deleteUserSchema } = require('../schemas/user.schema');
 const validatorHandler = require('../middlewares/validator.handler');
 
 router.get('/',
+  passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
     try {
       const users = await service.find();
@@ -15,13 +17,14 @@ router.get('/',
   });
 
 router.post('/',
+  passport.authenticate('jwt', { session: false }),
   validatorHandler(createUserSchema, 'body'),
   async (req, res, next) => {
     try {
-      const order = await service.create(req.body);
+      const user = await service.create(req.body);
       res.status(201).json({
-        message: 'The order was created succesfully',
-        order: order,
+        message: 'The user was created succesfully',
+        user: user,
       });
     } catch (error) {
       next(error);
@@ -29,6 +32,7 @@ router.post('/',
   });
 
 router.get('/:id',
+  passport.authenticate('jwt', { session: false }),
   validatorHandler(getUserSchema, 'params'),
   async (req, res, next) => {
     try {
@@ -41,6 +45,7 @@ router.get('/:id',
 
 
 router.patch('/:id',
+  passport.authenticate('jwt', { session: false }),
   validatorHandler(updateUserSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -52,6 +57,7 @@ router.patch('/:id',
   });
 
 router.delete('/:id',
+  passport.authenticate('jwt', { session: false }),
   validatorHandler(deleteUserSchema, 'params'),
   async (req, res, next) => {
     try {
