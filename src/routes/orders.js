@@ -1,4 +1,6 @@
 const router = require('express').Router();
+const passport = require('passport');
+const { checkRoles } = require('../middlewares/auth.handler');
 const OrdersService = require('../services/orders');
 const service = new OrdersService();
 const validatorHandler = require('../middlewares/validator.handler');
@@ -14,15 +16,16 @@ router.get('/',
   });
 
 router.post('/',
-  validatorHandler(createOrderSchema, 'body'),
+  passport.authenticate('jwt', { session: false }),
+  // validatorHandler(createOrderSchema, 'body'),
   async (req, res) => {
     try {
       res.status(201).json({
         message: 'The order was created succesfully',
-        order: await service.create(req.body),
+        order: await service.create(req.user.sub),
       });
     } catch (error) {
-      res.status(202).json({
+      res.status(400).json({
         message: error.message,
       });
     };
@@ -69,7 +72,7 @@ router.delete('/:id',
         item: await service.addItem(req.body),
       });
     } catch (error) {
-      res.status(202).json({
+      res.status(400).json({
         message: error.message,
       });
     };

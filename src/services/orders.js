@@ -5,10 +5,15 @@ class OrdersService {
   constructor() {
   };
   async create(body) {
-    const order = await models.Order.create(body);
-    if (!order) {
-      throw boom.badRequest('Bad Request');
-    };
+    const customer = await models.Customer.findOne({
+      where: {
+        '$user.id$': body,
+      },
+      include:['user'],
+    });
+    const order = await models.Order.create({
+      customerId: customer.id,
+    });
     return order;
   };
   async addItem(body) {
@@ -18,6 +23,24 @@ class OrdersService {
     };
     return item;
   };
+  async findByUser(userId) {
+    const orders = await models.Order.findAll({
+      where: {
+        '$customer.user.id$': userId,
+      },
+      include: [
+        {
+          association: 'customer',
+          include: ['user'],
+        },
+      ],
+    });
+    return orders;
+  };
+  /**
+   * This method finds all orders in the data base
+   * @returns orders
+   */
   async find() {
     return await models.Order.findAll();
   };

@@ -14,6 +14,7 @@ const notFound = require('../routes/notFound');
 const home = require('../routes/home');
 const customers = require('./customer');
 const auth = require('./auth');
+const profileRouter = require('./profile.router');
 
 
 module.exports = (function (app) {
@@ -30,8 +31,8 @@ module.exports = (function (app) {
   router.use('/sendEmail', sendEmail);
   router.use('/passwordRecovery', passwordRecovery);
   router.use('/singUp', signUp);
-  router.use('/*', notFound);
   router.use('/customers', customers);
   router.use('/auth', auth);
-
+  router.use('/profile', profileRouter)
+  router.use('/*', notFound);
 });

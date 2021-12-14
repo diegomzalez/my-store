@@ -13,7 +13,7 @@ const getOrderSchema = Joi.object({
 });
 const createOrderSchema = Joi.object({
   customerId: customerId.required(),
-  address: address.required(),
+  // address: address.required(),
 });
 const updateOrderSchema = Joi.object({
   id,
@@ -25,7 +25,7 @@ const deleteOrderSchema = Joi.object({
 });
 const addItemSchema = Joi.object({
   orderId: orderId.required(),
-  productId: orderId.required(),
+  productId: productId.required(),
   amount: amount.required(),
 })
 

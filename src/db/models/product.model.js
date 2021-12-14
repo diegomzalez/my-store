@@ -1,4 +1,4 @@
-const { Model, DataTypes } = require('sequelize');
+const { Model, DataTypes, Sequelize } = require('sequelize');
 const { CATEGORY_TABLE } = require('./category.model');
 
 const PRODUCT_TABLE = 'products';
@@ -26,6 +26,12 @@ const ProductSchema = {
     allowNull: false,
     type: DataTypes.TEXT,
   },
+  createdAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+    field: 'created_at',
+    defaultValue: Sequelize.NOW,
+  },
   isBlock: {
     allowNull: false,
     type: DataTypes.BOOLEAN,
@@ -40,7 +46,8 @@ const ProductSchema = {
     },
     onUpdate: 'CASCADE',
     onDelete: 'cascade'
-  }
+  },
+
 };
 
 class Product extends Model {
