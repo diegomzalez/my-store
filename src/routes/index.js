@@ -13,7 +13,7 @@ const signUp = require('../routes/signUp');
 const notFound = require('../routes/notFound');
 const home = require('../routes/home');
 const customers = require('./customer');
-const auth = require('./auth');
+const auth = require('./auth.routes');
 const profileRouter = require('./profile.router');
 
 
