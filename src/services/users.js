@@ -33,12 +33,6 @@ class UsersService {
   };
   async update(id, body) {
     const user = await this.findOne(id);
-    if (body.password) {
-      body = {
-        ...body,
-        password: bcrypt.hashSync(body.password, 10),
-      };
-    };
     return await user.update(body);
   };
   async delete(id) {
