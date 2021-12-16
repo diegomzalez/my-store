@@ -6,7 +6,7 @@ const validatorHandler = require('../middlewares/validator.handler');
 const { createProductSchema, updateProductSchema, getProductSchema, deleteProductSchema, queryProductSchema } = require('../schemas/product.schema');
 
 router.get('/',
-  passport.authenticate('jwt', { session: false }),
+  // passport.authenticate('jwt', { session: false }),
   validatorHandler(queryProductSchema, 'query'),
   async (req, res, next) => {
     try {
