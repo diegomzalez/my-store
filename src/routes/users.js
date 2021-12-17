@@ -10,7 +10,7 @@ router.get('/',
   async (req, res, next) => {
     try {
       const users = await service.find();
-      res.statusCode = 302;
+      res.statusCode = 200;
       res.status(res.statusCode).send(users);
     } catch (error) {
       next(error);
