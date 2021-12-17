@@ -7,19 +7,13 @@ const { createProductSchema, updateProductSchema, getProductSchema, deleteProduc
 
 router.get('/',
   // passport.authenticate('jwt', { session: false }),
-  validatorHandler(queryProductSchema, 'query'),
   async (req, res, next) => {
     try {
-      const products = await service.find();
-      res.statusCode = 302;
-      res.status(res.statusCode).json({
-        statusCode: res.statusCode,
-        message: 'The products was find succesfully',
-        products: products,
-      });
+      const users = await service.find();
+      res.status(200).send(users);
     } catch (error) {
       next(error);
-    };
+    }
   });
 
 router.post('/',

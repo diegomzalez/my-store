@@ -1,5 +1,4 @@
 const { models } = require('../libs/sequelize');
-const { Op } = require('sequelize');
 
 class ProductsService {
   constructor() {
