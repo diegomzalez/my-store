@@ -6,7 +6,7 @@ const { createUserSchema, updateUserSchema, getUserSchema, deleteUserSchema } = 
 const validatorHandler = require('../middlewares/validator.handler');
 
 router.get('/',
-  passport.authenticate('jwt', { session: false }),
+  // passport.authenticate('jwt', { session: false }),
   async (req, res, next) => {
     try {
       const users = await service.find();
