@@ -10,7 +10,7 @@ router.get('/',
   validatorHandler(queryProductSchema, 'query'),
   async (req, res, next) => {
     try {
-      const products = await service.find(req.query);
+      const products = await service.find();
       res.statusCode = 302;
       res.status(res.statusCode).json({
         statusCode: res.statusCode,
