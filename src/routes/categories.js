@@ -9,8 +9,12 @@ const { checkRoles } = require('../middlewares/auth.handler');
 router.get('/',
   passport.authenticate('jwt', { session: false }),
   checkRoles('admin', 'customer'),
-  async (req, res) => {
-    res.status(200).send(await service.find());
+  async (req, res, next) => {
+    try {
+      res.status(200).send(await service.find());
+    } catch (error) {
+      next(error);
+    }
   });
 
 router.post('/',
@@ -19,10 +23,7 @@ router.post('/',
   validatorHandler(createCategoryrSchema, 'body'),
   async (req, res, next) => {
     try {
-      res.status(201).json({
-        message: 'The category was created succesfully',
-        category: await service.create(req.body),
-      });
+      res.status(201).json(await service.create(req.body));
     } catch (error) {
       next(error);
     };
@@ -58,8 +59,7 @@ router.delete('/:id',
   validatorHandler(deleteCategoryrSchema, "params"),
   async (req, res, next) => {
     try {
-      await service.delete(req.params.id);
-      res.status(202).json('The category was deleted');
+      res.status(202).json(await service.delete(req.params.id));
     } catch (error) {
       next(error);
     };

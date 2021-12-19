@@ -1,4 +1,4 @@
-const { Model, DataTypes, Sequelize} = require('sequelize');
+const { Model, DataTypes, Sequelize } = require('sequelize');
 const { hashPassword } = require('../hooks/hash');
 const { hideHash } = require('../hooks/hidingHash');
 
@@ -54,13 +54,13 @@ class User extends Model {
       timestamps: false,
       hooks: {
         beforeCreate: async (user, options) => {
-          await hashPassword(user, options);
+          if (user) await hashPassword(user, options);
         },
         afterCreate: async (user, options) => {
-          await hideHash(user, options);
+          if (user) await hideHash(user, options);
         },
         afterFind: async (user, options) => {
-          await hideHash(user, options)
+          if (user) await hideHash(user, options);
         },
       },
     };

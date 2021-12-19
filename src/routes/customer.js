@@ -36,7 +36,7 @@ router.get('/:id',
   validationHandler(getCustomerSchema, 'params'),
   async (req, res, next) => {
     try {
-      res.status(302).json(await service.findOne(req.params.id))
+      res.status(200).json(await service.findOne(req.params.id))
     } catch (err) {
       next(err);
     };
@@ -52,7 +52,7 @@ router.patch('/:id',
     try {
       const { id } = req.params;
       const body = req.body;
-      res.status(201).json(await service.update(id, body));
+      res.status(200).json(await service.update(id, body));
     } catch (error) {
       next(error);
     }

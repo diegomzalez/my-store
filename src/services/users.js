@@ -1,5 +1,4 @@
 const boom = require('@hapi/boom');
-const bcrypt = require('bcrypt');
 const { models } = require('../libs/sequelize');
 
 class UsersService {
@@ -37,7 +36,9 @@ class UsersService {
   };
   async delete(id) {
     const user = await this.findOne(id);
-    return await user.destroy();
+    return await user.destroy({
+
+    });
   };
 };
 

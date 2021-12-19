@@ -10,7 +10,7 @@ router.post('/login',
   async (req, res, next) => {
     try {
       const response = await service.signToken(req.user);
-      res.status(201).json(response);
+      res.status(200).json(response);
     } catch (error) {
       next(error);
     };
@@ -31,7 +31,7 @@ router.post('/change-password',
   async (req, res, next) => {
     try {
       const response = await service.changePassword(req.body.token, req.body.newPassword);
-      res.status(201).json(response);
+      res.status(200).json(response);
     } catch (error) {
       next(error);
     };
