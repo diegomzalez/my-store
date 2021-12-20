@@ -9,8 +9,7 @@ router.post('/login',
   passport.authenticate('local', { session: false }),
   async (req, res, next) => {
     try {
-      const response = await service.signToken(req.user);
-      res.status(200).json(response);
+      res.status(200).json(await service.signToken(req.user));
     } catch (error) {
       next(error);
     };
@@ -30,8 +29,7 @@ router.post('/change-password',
   validatorHandler(changePasswordSquema, 'req'),
   async (req, res, next) => {
     try {
-      const response = await service.changePassword(req.body.token, req.body.newPassword);
-      res.status(200).json(response);
+      res.status(200).json(await service.changePassword(req.body.token, req.body.newPassword));
     } catch (error) {
       next(error);
     };

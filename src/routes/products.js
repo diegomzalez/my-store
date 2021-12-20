@@ -63,8 +63,8 @@ router.delete('/:id',
   validatorHandler(deleteProductSchema, 'params'),
   async (req, res, next) => {
     try {
-      const product = await service.delete(req.params.id);
-      res.status(200).json(product);
+      await service.delete(req.params.id);
+      res.status(200).json('Product deleted');
     } catch (error) {
       next(error);
     };

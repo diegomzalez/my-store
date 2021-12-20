@@ -66,7 +66,7 @@ router.delete('/:id',
   async (req, res, next) => {
     try {
       await service.delete(req.params.id);
-      res.status(200).json('The order was deleted');
+      res.status(200).json('Order deleted');
     } catch (error) {
       next(error);
     };
@@ -78,10 +78,7 @@ router.post('/add-item',
   validatorHandler(addItemSchema, 'body'),
   async (req, res, next) => {
     try {
-      res.status(200).json({
-        message: 'The order was created succesfully',
-        item: await service.addItem(req.body),
-      });
+      res.status(200).json(await service.addItem(req.body));
     } catch (error) {
       next(error);
     };

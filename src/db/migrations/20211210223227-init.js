@@ -31,6 +31,11 @@ module.exports = {
         type: Sequelize.DataTypes.STRING,
         efaultValue: 'customer',
       },
+      recovery_token: {
+        field: 'recovery_token',
+        allowNull: true,
+        type: Sequelize.DataTypes.STRING,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,
@@ -66,7 +71,7 @@ module.exports = {
       },
       userId: {
         field: 'user_id',
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DataTypes.INTEGER,
         unique: true,
         references: {

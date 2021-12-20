@@ -64,8 +64,8 @@ router.delete('/:id',
   validationHandler(getCustomerSchema, 'params'),
   async (req, res, next) => {
     try {
-      const { id } = req.params;
-      res.status(200).json(await service.delete(id));
+      await service.delete(req.params.id)
+      res.status(200).json('Customer deleted');
     } catch (error) {
       next(error);
     }

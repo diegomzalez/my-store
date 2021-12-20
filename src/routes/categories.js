@@ -59,7 +59,8 @@ router.delete('/:id',
   validatorHandler(deleteCategoryrSchema, "params"),
   async (req, res, next) => {
     try {
-      res.status(202).json(await service.delete(req.params.id));
+      await service.delete(req.params.id)
+      res.status(202).json('Category deleted');
     } catch (error) {
       next(error);
     };
