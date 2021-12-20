@@ -1,6 +1,7 @@
 # my-store
 Express course
 Learning Express to build applications with Node.js.
+API was published here => https://secure-woodland-26804.herokuapp.com/api/v1/
 
 # Express
 Express is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
